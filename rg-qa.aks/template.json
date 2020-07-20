@@ -1,0 +1,89 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "managedClusters_aks101cluster_name": {
+            "defaultValue": "aks101cluster",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ContainerService/managedClusters",
+            "apiVersion": "2020-06-01",
+            "name": "[parameters('managedClusters_aks101cluster_name')]",
+            "location": "westus2",
+            "sku": {
+                "name": "Basic",
+                "tier": "Free"
+            },
+            "properties": {
+                "kubernetesVersion": "1.16.10",
+                "dnsPrefix": "[parameters('managedClusters_aks101cluster_name')]",
+                "agentPoolProfiles": [
+                    {
+                        "name": "agentpool",
+                        "count": 3,
+                        "vmSize": "Standard_DS2_v2",
+                        "osDiskSizeGB": 128,
+                        "maxPods": 110,
+                        "type": "AvailabilitySet",
+                        "orchestratorVersion": "1.16.10",
+                        "mode": "User",
+                        "osType": "Linux",
+                        "nodeImageVersion": "AKSUbuntu-1604-2020.06.25"
+                    }
+                ],
+                "linuxProfile": {
+                    "adminUsername": "ladmin",
+                    "ssh": {
+                        "publicKeys": [
+                            {
+                                "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDL1EyhNNaTHCgelH9NKsJKzRR2hoiwxrNhORwyyJF9GbTqrojzjCec1Wot8j20uk+NY5zOyNr71m26innNj52+zGVf9YsyhbqYYE/hE0PE8arJjHqApEzPAT1svaaYf8vE79IEMYr2RFPHLAlnSe/T/qJIp9izTYDmjoqyFoC4mfi9qS/G6JBgEHQFWFPsVRJmyIOWMdYduHmj+kpsgV9H3bGAteYkb7LgVax5NMTkYWx+gzdJAwDc+pvBAzi7WVpq8mB+tRPg4/BCNNj9uz7lt7LNn5qRzFzkgOH/hzKP2VYK19du+pKkwTILdiaNTnLP8abvw4gZfdpWjMn9CjcH jschreiber@JSCHREIBER-Mac"
+                            }
+                        ]
+                    }
+                },
+                "servicePrincipalProfile": {
+                    "clientId": "6d63d03b-86d5-4ba0-a4a7-d86592ff64a3"
+                },
+                "addonProfiles": {
+                    "KubeDashboard": {
+                        "enabled": true
+                    }
+                },
+                "nodeResourceGroup": "[concat('MC_rg-qa.aks_', parameters('managedClusters_aks101cluster_name'), '_westus2')]",
+                "enableRBAC": false,
+                "networkProfile": {
+                    "networkPlugin": "kubenet",
+                    "loadBalancerSku": "Basic",
+                    "podCidr": "10.244.0.0/16",
+                    "serviceCidr": "10.0.0.0/16",
+                    "dnsServiceIP": "10.0.0.10",
+                    "dockerBridgeCidr": "172.17.0.1/16",
+                    "outboundType": "loadBalancer"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.ContainerService/managedClusters/agentPools",
+            "apiVersion": "2020-06-01",
+            "name": "[concat(parameters('managedClusters_aks101cluster_name'), '/agentpool')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_aks101cluster_name'))]"
+            ],
+            "properties": {
+                "count": 3,
+                "vmSize": "Standard_DS2_v2",
+                "osDiskSizeGB": 128,
+                "maxPods": 110,
+                "type": "AvailabilitySet",
+                "orchestratorVersion": "1.16.10",
+                "mode": "User",
+                "osType": "Linux",
+                "nodeImageVersion": "AKSUbuntu-1604-2020.06.25"
+            }
+        }
+    ]
+}

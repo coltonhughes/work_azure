@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccounts_rgqauc2diag_name": {
+            "value": null
+        },
+        "virtualNetworks_vnet_a_qa_uc2_name": {
+            "value": null
+        },
+        "applicationSecurityGroups_asg_suba_name": {
+            "value": null
+        },
+        "applicationSecurityGroups_asg_subb_name": {
+            "value": null
+        },
+        "virtualMachines_vm_a_sub_a_vnet_a_qa_uc2_name": {
+            "value": null
+        },
+        "virtualMachines_vm_a_sub_b_vnet_a_qa_uc2_name": {
+            "value": null
+        },
+        "publicIPAddresses_pip_a_sub_a_vnet_a_qa_uc2_name": {
+            "value": null
+        },
+        "networkInterfaces_vnic_a_sub_a_vnet_a_qa_uc2_name": {
+            "value": null
+        },
+        "networkInterfaces_vnic_a_sub_b_vnet_a_qa_uc2_name": {
+            "value": null
+        },
+        "networkSecurityGroups_nsg_sub_ab_vnet_a_qa_uc2_name": {
+            "value": null
+        },
+        "networkSecurityGroups_nsg_vnic_a_sub_a_vnet_a_qa_uc2_name": {
+            "value": null
+        },
+        "networkSecurityGroups_nsg_vnic_a_sub_b_vnet_a_qa_uc2_name": {
+            "value": null
+        },
+        "schedules_shutdown_computevm_vm_a_sub_a_vnet_a_qa_uc2_name": {
+            "value": null
+        },
+        "schedules_shutdown_computevm_vm_a_sub_b_vnet_a_qa_uc2_name": {
+            "value": null
+        }
+    }
+}

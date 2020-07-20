@@ -1,0 +1,143 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "networkWatchers_NetworkWatcher_eastus_name": {
+            "defaultValue": "NetworkWatcher_eastus",
+            "type": "String"
+        },
+        "networkWatchers_NetworkWatcher_westus_name": {
+            "defaultValue": "NetworkWatcher_westus",
+            "type": "String"
+        },
+        "networkWatchers_NetworkWatcher_westus2_name": {
+            "defaultValue": "NetworkWatcher_westus2",
+            "type": "String"
+        },
+        "networkWatchers_NetworkWatcher_centralus_name": {
+            "defaultValue": "NetworkWatcher_centralus",
+            "type": "String"
+        },
+        "networkSecurityGroups_nsg_sub_a_vnet_a_qa_uc1_externalid": {
+            "defaultValue": "/subscriptions/f8cb2345-46ba-46be-9ef5-552e8b04571c/resourceGroups/rg-qa.uc1/providers/Microsoft.Network/networkSecurityGroups/nsg-sub.a.vnet.a.qa.uc1",
+            "type": "String"
+        },
+        "storageAccounts_rgqauc1nsglogs1_externalid": {
+            "defaultValue": "/subscriptions/f8cb2345-46ba-46be-9ef5-552e8b04571c/resourceGroups/rg-qa.uc1/providers/Microsoft.Storage/storageAccounts/rgqauc1nsglogs1",
+            "type": "String"
+        },
+        "workspaces_rgqansglogs_externalid": {
+            "defaultValue": "/subscriptions/f8cb2345-46ba-46be-9ef5-552e8b04571c/resourceGroups/rg-qa.uc1/providers/Microsoft.OperationalInsights/workspaces/rgqansglogs",
+            "type": "String"
+        },
+        "networkSecurityGroups_nsg_vnic_a_sub_a_vnet_a_qa_uc1_externalid": {
+            "defaultValue": "/subscriptions/f8cb2345-46ba-46be-9ef5-552e8b04571c/resourceGroups/rg-qa.uc1/providers/Microsoft.Network/networkSecurityGroups/nsg-vnic.a.sub.a.vnet.a.qa.uc1",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkWatchers",
+            "apiVersion": "2020-05-01",
+            "name": "[parameters('networkWatchers_NetworkWatcher_centralus_name')]",
+            "location": "centralus",
+            "properties": {
+                "provisioningState": "Succeeded",
+                "runningOperationIds": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkWatchers",
+            "apiVersion": "2020-05-01",
+            "name": "[parameters('networkWatchers_NetworkWatcher_eastus_name')]",
+            "location": "eastus",
+            "properties": {
+                "provisioningState": "Succeeded",
+                "runningOperationIds": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkWatchers",
+            "apiVersion": "2020-05-01",
+            "name": "[parameters('networkWatchers_NetworkWatcher_westus_name')]",
+            "location": "westus",
+            "properties": {
+                "provisioningState": "Succeeded",
+                "runningOperationIds": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkWatchers",
+            "apiVersion": "2020-05-01",
+            "name": "[parameters('networkWatchers_NetworkWatcher_westus2_name')]",
+            "location": "westus2",
+            "properties": {
+                "provisioningState": "Succeeded",
+                "runningOperationIds": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkWatchers/FlowLogs",
+            "apiVersion": "2020-05-01",
+            "name": "[concat(parameters('networkWatchers_NetworkWatcher_centralus_name'), '/nsg-sub.a.vnet.a.qa.uc1-rg-qa.uc1-flowlog')]",
+            "location": "centralus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkWatchers', parameters('networkWatchers_NetworkWatcher_centralus_name'))]"
+            ],
+            "properties": {
+                "targetResourceId": "[parameters('networkSecurityGroups_nsg_sub_a_vnet_a_qa_uc1_externalid')]",
+                "storageId": "[parameters('storageAccounts_rgqauc1nsglogs1_externalid')]",
+                "enabled": true,
+                "flowAnalyticsConfiguration": {
+                    "networkWatcherFlowAnalyticsConfiguration": {
+                        "enabled": true,
+                        "workspaceId": "6c6d53c9-a2c3-4324-941a-8063b4fe9d73",
+                        "workspaceRegion": "centralus",
+                        "workspaceResourceId": "[parameters('workspaces_rgqansglogs_externalid')]",
+                        "trafficAnalyticsInterval": 60
+                    }
+                },
+                "retentionPolicy": {
+                    "days": 0,
+                    "enabled": false
+                },
+                "format": {
+                    "type": "JSON",
+                    "version": 1
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkWatchers/FlowLogs",
+            "apiVersion": "2020-05-01",
+            "name": "[concat(parameters('networkWatchers_NetworkWatcher_centralus_name'), '/nsg-vnic.a.sub.a.vnet.a.qa.uc1-rg-qa.uc1-flowlog')]",
+            "location": "centralus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkWatchers', parameters('networkWatchers_NetworkWatcher_centralus_name'))]"
+            ],
+            "properties": {
+                "targetResourceId": "[parameters('networkSecurityGroups_nsg_vnic_a_sub_a_vnet_a_qa_uc1_externalid')]",
+                "storageId": "[parameters('storageAccounts_rgqauc1nsglogs1_externalid')]",
+                "enabled": true,
+                "flowAnalyticsConfiguration": {
+                    "networkWatcherFlowAnalyticsConfiguration": {
+                        "enabled": true,
+                        "workspaceId": "6c6d53c9-a2c3-4324-941a-8063b4fe9d73",
+                        "workspaceRegion": "centralus",
+                        "workspaceResourceId": "[parameters('workspaces_rgqansglogs_externalid')]",
+                        "trafficAnalyticsInterval": 60
+                    }
+                },
+                "retentionPolicy": {
+                    "days": 0,
+                    "enabled": false
+                },
+                "format": {
+                    "type": "JSON",
+                    "version": 2
+                }
+            }
+        }
+    ]
+}

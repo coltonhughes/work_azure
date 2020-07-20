@@ -1,0 +1,78 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "extensions_cse_agent_0_fileUris": {
+            "value": null
+        },
+        "extensions_cse_agent_0_storageAccountName": {
+            "value": null
+        },
+        "extensions_cse_agent_0_storageAccountKey": {
+            "value": null
+        },
+        "extensions_cse_agent_0_commandToExecute": {
+            "value": null
+        },
+        "extensions_cse_agent_1_fileUris": {
+            "value": null
+        },
+        "extensions_cse_agent_1_storageAccountName": {
+            "value": null
+        },
+        "extensions_cse_agent_1_storageAccountKey": {
+            "value": null
+        },
+        "extensions_cse_agent_1_commandToExecute": {
+            "value": null
+        },
+        "extensions_cse_agent_2_fileUris": {
+            "value": null
+        },
+        "extensions_cse_agent_2_storageAccountName": {
+            "value": null
+        },
+        "extensions_cse_agent_2_storageAccountKey": {
+            "value": null
+        },
+        "extensions_cse_agent_2_commandToExecute": {
+            "value": null
+        },
+        "loadBalancers_kubernetes_name": {
+            "value": null
+        },
+        "virtualNetworks_aks_vnet_32222301_name": {
+            "value": null
+        },
+        "virtualMachines_aks_agentpool_32222301_0_name": {
+            "value": null
+        },
+        "virtualMachines_aks_agentpool_32222301_1_name": {
+            "value": null
+        },
+        "virtualMachines_aks_agentpool_32222301_2_name": {
+            "value": null
+        },
+        "routeTables_aks_agentpool_32222301_routetable_name": {
+            "value": null
+        },
+        "networkInterfaces_aks_agentpool_32222301_nic_0_name": {
+            "value": null
+        },
+        "networkInterfaces_aks_agentpool_32222301_nic_1_name": {
+            "value": null
+        },
+        "networkInterfaces_aks_agentpool_32222301_nic_2_name": {
+            "value": null
+        },
+        "networkSecurityGroups_aks_agentpool_32222301_nsg_name": {
+            "value": null
+        },
+        "availabilitySets_agentpool_availabilitySet_32222301_name": {
+            "value": null
+        },
+        "publicIPAddresses_kubernetes_a9f9eeeff213344d7b93177af37d29bb_name": {
+            "value": null
+        }
+    }
+}

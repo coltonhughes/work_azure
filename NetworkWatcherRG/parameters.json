@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "networkWatchers_NetworkWatcher_eastus_name": {
+            "value": null
+        },
+        "networkWatchers_NetworkWatcher_westus_name": {
+            "value": null
+        },
+        "networkWatchers_NetworkWatcher_westus2_name": {
+            "value": null
+        },
+        "networkWatchers_NetworkWatcher_centralus_name": {
+            "value": null
+        },
+        "networkSecurityGroups_nsg_sub_a_vnet_a_qa_uc1_externalid": {
+            "value": null
+        },
+        "storageAccounts_rgqauc1nsglogs1_externalid": {
+            "value": null
+        },
+        "workspaces_rgqansglogs_externalid": {
+            "value": null
+        },
+        "networkSecurityGroups_nsg_vnic_a_sub_a_vnet_a_qa_uc1_externalid": {
+            "value": null
+        }
+    }
+}

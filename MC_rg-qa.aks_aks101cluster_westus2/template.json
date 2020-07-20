@@ -1,0 +1,792 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "extensions_cse_agent_0_fileUris": {
+            "type": "Array"
+        },
+        "extensions_cse_agent_0_storageAccountName": {
+            "type": "SecureString"
+        },
+        "extensions_cse_agent_0_storageAccountKey": {
+            "type": "SecureString"
+        },
+        "extensions_cse_agent_0_commandToExecute": {
+            "type": "SecureString"
+        },
+        "extensions_cse_agent_1_fileUris": {
+            "type": "Array"
+        },
+        "extensions_cse_agent_1_storageAccountName": {
+            "type": "SecureString"
+        },
+        "extensions_cse_agent_1_storageAccountKey": {
+            "type": "SecureString"
+        },
+        "extensions_cse_agent_1_commandToExecute": {
+            "type": "SecureString"
+        },
+        "extensions_cse_agent_2_fileUris": {
+            "type": "Array"
+        },
+        "extensions_cse_agent_2_storageAccountName": {
+            "type": "SecureString"
+        },
+        "extensions_cse_agent_2_storageAccountKey": {
+            "type": "SecureString"
+        },
+        "extensions_cse_agent_2_commandToExecute": {
+            "type": "SecureString"
+        },
+        "loadBalancers_kubernetes_name": {
+            "defaultValue": "kubernetes",
+            "type": "String"
+        },
+        "virtualNetworks_aks_vnet_32222301_name": {
+            "defaultValue": "aks-vnet-32222301",
+            "type": "String"
+        },
+        "virtualMachines_aks_agentpool_32222301_0_name": {
+            "defaultValue": "aks-agentpool-32222301-0",
+            "type": "String"
+        },
+        "virtualMachines_aks_agentpool_32222301_1_name": {
+            "defaultValue": "aks-agentpool-32222301-1",
+            "type": "String"
+        },
+        "virtualMachines_aks_agentpool_32222301_2_name": {
+            "defaultValue": "aks-agentpool-32222301-2",
+            "type": "String"
+        },
+        "routeTables_aks_agentpool_32222301_routetable_name": {
+            "defaultValue": "aks-agentpool-32222301-routetable",
+            "type": "String"
+        },
+        "networkInterfaces_aks_agentpool_32222301_nic_0_name": {
+            "defaultValue": "aks-agentpool-32222301-nic-0",
+            "type": "String"
+        },
+        "networkInterfaces_aks_agentpool_32222301_nic_1_name": {
+            "defaultValue": "aks-agentpool-32222301-nic-1",
+            "type": "String"
+        },
+        "networkInterfaces_aks_agentpool_32222301_nic_2_name": {
+            "defaultValue": "aks-agentpool-32222301-nic-2",
+            "type": "String"
+        },
+        "networkSecurityGroups_aks_agentpool_32222301_nsg_name": {
+            "defaultValue": "aks-agentpool-32222301-nsg",
+            "type": "String"
+        },
+        "availabilitySets_agentpool_availabilitySet_32222301_name": {
+            "defaultValue": "agentpool-availabilitySet-32222301",
+            "type": "String"
+        },
+        "publicIPAddresses_kubernetes_a9f9eeeff213344d7b93177af37d29bb_name": {
+            "defaultValue": "kubernetes-a9f9eeeff213344d7b93177af37d29bb",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2020-05-01",
+            "name": "[parameters('networkSecurityGroups_aks_agentpool_32222301_nsg_name')]",
+            "location": "westus2",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "a9f9eeeff213344d7b93177af37d29bb-TCP-80-Internet",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "80",
+                            "sourceAddressPrefix": "Internet",
+                            "destinationAddressPrefix": "52.183.2.246",
+                            "access": "Allow",
+                            "priority": 500,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2020-05-01",
+            "name": "[parameters('publicIPAddresses_kubernetes_a9f9eeeff213344d7b93177af37d29bb_name')]",
+            "location": "westus2",
+            "tags": {
+                "kubernetes-cluster-name": "kubernetes",
+                "service": "default/azure-vote-front"
+            },
+            "sku": {
+                "name": "Basic"
+            },
+            "properties": {
+                "ipAddress": "52.183.2.246",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4,
+                "ipTags": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2020-05-01",
+            "name": "[parameters('routeTables_aks_agentpool_32222301_routetable_name')]",
+            "location": "westus2",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "aks-agentpool-32222301-0",
+                        "properties": {
+                            "addressPrefix": "10.244.0.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.240.0.6"
+                        }
+                    },
+                    {
+                        "name": "aks-agentpool-32222301-2",
+                        "properties": {
+                            "addressPrefix": "10.244.1.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.240.0.5"
+                        }
+                    },
+                    {
+                        "name": "aks-agentpool-32222301-1",
+                        "properties": {
+                            "addressPrefix": "10.244.2.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.240.0.4"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2019-07-01",
+            "name": "[concat(parameters('virtualMachines_aks_agentpool_32222301_0_name'), '/cse-agent-0')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_aks_agentpool_32222301_0_name'))]"
+            ],
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "publisher": "Microsoft.Azure.Extensions",
+                "type": "CustomScript",
+                "typeHandlerVersion": "2.0",
+                "settings": {
+                    "fileUris": "[parameters('extensions_cse_agent_0_fileUris')]"
+                },
+                "protectedSettings": {
+                    "storageAccountName": "[parameters('extensions_cse_agent_0_storageAccountName')]",
+                    "storageAccountKey": "[parameters('extensions_cse_agent_0_storageAccountKey')]",
+                    "commandToExecute": "[parameters('extensions_cse_agent_0_commandToExecute')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2019-07-01",
+            "name": "[concat(parameters('virtualMachines_aks_agentpool_32222301_1_name'), '/cse-agent-1')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_aks_agentpool_32222301_1_name'))]"
+            ],
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "publisher": "Microsoft.Azure.Extensions",
+                "type": "CustomScript",
+                "typeHandlerVersion": "2.0",
+                "settings": {
+                    "fileUris": "[parameters('extensions_cse_agent_1_fileUris')]"
+                },
+                "protectedSettings": {
+                    "storageAccountName": "[parameters('extensions_cse_agent_1_storageAccountName')]",
+                    "storageAccountKey": "[parameters('extensions_cse_agent_1_storageAccountKey')]",
+                    "commandToExecute": "[parameters('extensions_cse_agent_1_commandToExecute')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2019-07-01",
+            "name": "[concat(parameters('virtualMachines_aks_agentpool_32222301_2_name'), '/cse-agent-2')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_aks_agentpool_32222301_2_name'))]"
+            ],
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "publisher": "Microsoft.Azure.Extensions",
+                "type": "CustomScript",
+                "typeHandlerVersion": "2.0",
+                "settings": {
+                    "fileUris": "[parameters('extensions_cse_agent_2_fileUris')]"
+                },
+                "protectedSettings": {
+                    "storageAccountName": "[parameters('extensions_cse_agent_2_storageAccountName')]",
+                    "storageAccountKey": "[parameters('extensions_cse_agent_2_storageAccountKey')]",
+                    "commandToExecute": "[parameters('extensions_cse_agent_2_commandToExecute')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/loadBalancers/backendAddressPools",
+            "apiVersion": "2020-05-01",
+            "name": "[concat(parameters('loadBalancers_kubernetes_name'), '/', parameters('loadBalancers_kubernetes_name'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_kubernetes_name'))]"
+            ],
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2020-05-01",
+            "name": "[concat(parameters('networkSecurityGroups_aks_agentpool_32222301_nsg_name'), '/a9f9eeeff213344d7b93177af37d29bb-TCP-80-Internet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_aks_agentpool_32222301_nsg_name'))]"
+            ],
+            "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "Internet",
+                "destinationAddressPrefix": "52.183.2.246",
+                "access": "Allow",
+                "priority": 500,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/routeTables/routes",
+            "apiVersion": "2020-05-01",
+            "name": "[concat(parameters('routeTables_aks_agentpool_32222301_routetable_name'), '/aks-agentpool-32222301-0')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/routeTables', parameters('routeTables_aks_agentpool_32222301_routetable_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.244.0.0/24",
+                "nextHopType": "VirtualAppliance",
+                "nextHopIpAddress": "10.240.0.6"
+            }
+        },
+        {
+            "type": "Microsoft.Network/routeTables/routes",
+            "apiVersion": "2020-05-01",
+            "name": "[concat(parameters('routeTables_aks_agentpool_32222301_routetable_name'), '/aks-agentpool-32222301-1')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/routeTables', parameters('routeTables_aks_agentpool_32222301_routetable_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.244.2.0/24",
+                "nextHopType": "VirtualAppliance",
+                "nextHopIpAddress": "10.240.0.4"
+            }
+        },
+        {
+            "type": "Microsoft.Network/routeTables/routes",
+            "apiVersion": "2020-05-01",
+            "name": "[concat(parameters('routeTables_aks_agentpool_32222301_routetable_name'), '/aks-agentpool-32222301-2')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/routeTables', parameters('routeTables_aks_agentpool_32222301_routetable_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.244.1.0/24",
+                "nextHopType": "VirtualAppliance",
+                "nextHopIpAddress": "10.240.0.5"
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('virtualMachines_aks_agentpool_32222301_0_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_agentpool_availabilitySet_32222301_name'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_aks_agentpool_32222301_nic_0_name'))]"
+            ],
+            "tags": {
+                "aksEngineVersion": "v0.47.0-aks-gomod-81-aks",
+                "creationSource": "aks-aks-agentpool-32222301-0",
+                "orchestrator": "Kubernetes:1.16.10",
+                "poolName": "agentpool",
+                "resourceNameSuffix": "32222301"
+            },
+            "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_agentpool_availabilitySet_32222301_name'))]"
+                },
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS2_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "microsoft-aks",
+                        "offer": "aks",
+                        "sku": "aks-ubuntu-1604-202006",
+                        "version": "2020.06.25"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_aks_agentpool_32222301_0_name'), '_OsDisk_1_52e7e74dc4004103a3ed25cb3a2af742')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_aks_agentpool_32222301_0_name'), '_OsDisk_1_52e7e74dc4004103a3ed25cb3a2af742'))]"
+                        },
+                        "diskSizeGB": 128
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_aks_agentpool_32222301_0_name')]",
+                    "adminUsername": "ladmin",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "/home/ladmin/.ssh/authorized_keys",
+                                    "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDL1EyhNNaTHCgelH9NKsJKzRR2hoiwxrNhORwyyJF9GbTqrojzjCec1Wot8j20uk+NY5zOyNr71m26innNj52+zGVf9YsyhbqYYE/hE0PE8arJjHqApEzPAT1svaaYf8vE79IEMYr2RFPHLAlnSe/T/qJIp9izTYDmjoqyFoC4mfi9qS/G6JBgEHQFWFPsVRJmyIOWMdYduHmj+kpsgV9H3bGAteYkb7LgVax5NMTkYWx+gzdJAwDc+pvBAzi7WVpq8mB+tRPg4/BCNNj9uz7lt7LNn5qRzFzkgOH/hzKP2VYK19du+pKkwTILdiaNTnLP8abvw4gZfdpWjMn9CjcH jschreiber@JSCHREIBER-Mac"
+                                }
+                            ]
+                        },
+                        "provisionVMAgent": true
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_aks_agentpool_32222301_nic_0_name'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('virtualMachines_aks_agentpool_32222301_1_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_agentpool_availabilitySet_32222301_name'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_aks_agentpool_32222301_nic_1_name'))]"
+            ],
+            "tags": {
+                "aksEngineVersion": "v0.47.0-aks-gomod-81-aks",
+                "creationSource": "aks-aks-agentpool-32222301-1",
+                "orchestrator": "Kubernetes:1.16.10",
+                "poolName": "agentpool",
+                "resourceNameSuffix": "32222301"
+            },
+            "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_agentpool_availabilitySet_32222301_name'))]"
+                },
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS2_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "microsoft-aks",
+                        "offer": "aks",
+                        "sku": "aks-ubuntu-1604-202006",
+                        "version": "2020.06.25"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_aks_agentpool_32222301_1_name'), '_OsDisk_1_f5eead1b57c44eee9e688e19c751374f')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_aks_agentpool_32222301_1_name'), '_OsDisk_1_f5eead1b57c44eee9e688e19c751374f'))]"
+                        },
+                        "diskSizeGB": 128
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_aks_agentpool_32222301_1_name')]",
+                    "adminUsername": "ladmin",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "/home/ladmin/.ssh/authorized_keys",
+                                    "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDL1EyhNNaTHCgelH9NKsJKzRR2hoiwxrNhORwyyJF9GbTqrojzjCec1Wot8j20uk+NY5zOyNr71m26innNj52+zGVf9YsyhbqYYE/hE0PE8arJjHqApEzPAT1svaaYf8vE79IEMYr2RFPHLAlnSe/T/qJIp9izTYDmjoqyFoC4mfi9qS/G6JBgEHQFWFPsVRJmyIOWMdYduHmj+kpsgV9H3bGAteYkb7LgVax5NMTkYWx+gzdJAwDc+pvBAzi7WVpq8mB+tRPg4/BCNNj9uz7lt7LNn5qRzFzkgOH/hzKP2VYK19du+pKkwTILdiaNTnLP8abvw4gZfdpWjMn9CjcH jschreiber@JSCHREIBER-Mac"
+                                }
+                            ]
+                        },
+                        "provisionVMAgent": true
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_aks_agentpool_32222301_nic_1_name'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('virtualMachines_aks_agentpool_32222301_2_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_agentpool_availabilitySet_32222301_name'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_aks_agentpool_32222301_nic_2_name'))]"
+            ],
+            "tags": {
+                "aksEngineVersion": "v0.47.0-aks-gomod-81-aks",
+                "creationSource": "aks-aks-agentpool-32222301-2",
+                "orchestrator": "Kubernetes:1.16.10",
+                "poolName": "agentpool",
+                "resourceNameSuffix": "32222301"
+            },
+            "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_agentpool_availabilitySet_32222301_name'))]"
+                },
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS2_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "microsoft-aks",
+                        "offer": "aks",
+                        "sku": "aks-ubuntu-1604-202006",
+                        "version": "2020.06.25"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_aks_agentpool_32222301_2_name'), '_OsDisk_1_872c67a30bac44c780bb5fbf8aa97265')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_aks_agentpool_32222301_2_name'), '_OsDisk_1_872c67a30bac44c780bb5fbf8aa97265'))]"
+                        },
+                        "diskSizeGB": 128
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_aks_agentpool_32222301_2_name')]",
+                    "adminUsername": "ladmin",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "/home/ladmin/.ssh/authorized_keys",
+                                    "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDL1EyhNNaTHCgelH9NKsJKzRR2hoiwxrNhORwyyJF9GbTqrojzjCec1Wot8j20uk+NY5zOyNr71m26innNj52+zGVf9YsyhbqYYE/hE0PE8arJjHqApEzPAT1svaaYf8vE79IEMYr2RFPHLAlnSe/T/qJIp9izTYDmjoqyFoC4mfi9qS/G6JBgEHQFWFPsVRJmyIOWMdYduHmj+kpsgV9H3bGAteYkb7LgVax5NMTkYWx+gzdJAwDc+pvBAzi7WVpq8mB+tRPg4/BCNNj9uz7lt7LNn5qRzFzkgOH/hzKP2VYK19du+pKkwTILdiaNTnLP8abvw4gZfdpWjMn9CjcH jschreiber@JSCHREIBER-Mac"
+                                }
+                            ]
+                        },
+                        "provisionVMAgent": true
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_aks_agentpool_32222301_nic_2_name'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/loadBalancers",
+            "apiVersion": "2020-05-01",
+            "name": "[parameters('loadBalancers_kubernetes_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_kubernetes_a9f9eeeff213344d7b93177af37d29bb_name'))]",
+                "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_kubernetes_name'), parameters('loadBalancers_kubernetes_name'))]"
+            ],
+            "sku": {
+                "name": "Basic"
+            },
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "a9f9eeeff213344d7b93177af37d29bb",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_kubernetes_a9f9eeeff213344d7b93177af37d29bb_name'))]"
+                            },
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "[parameters('loadBalancers_kubernetes_name')]",
+                        "properties": {}
+                    }
+                ],
+                "loadBalancingRules": [
+                    {
+                        "name": "a9f9eeeff213344d7b93177af37d29bb-TCP-80",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_kubernetes_name')), '/frontendIPConfigurations/a9f9eeeff213344d7b93177af37d29bb')]"
+                            },
+                            "frontendPort": 80,
+                            "backendPort": 80,
+                            "enableFloatingIP": true,
+                            "idleTimeoutInMinutes": 4,
+                            "protocol": "Tcp",
+                            "enableTcpReset": false,
+                            "loadDistribution": "Default",
+                            "backendAddressPool": {
+                                "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_kubernetes_name'), parameters('loadBalancers_kubernetes_name'))]"
+                            },
+                            "probe": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_kubernetes_name')), '/probes/a9f9eeeff213344d7b93177af37d29bb-TCP-80')]"
+                            }
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "name": "a9f9eeeff213344d7b93177af37d29bb-TCP-80",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "port": 31620,
+                            "intervalInSeconds": 5,
+                            "numberOfProbes": 2
+                        }
+                    }
+                ],
+                "inboundNatRules": [],
+                "inboundNatPools": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2020-05-01",
+            "name": "[parameters('networkInterfaces_aks_agentpool_32222301_nic_0_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_aks_vnet_32222301_name'), 'aks-subnet')]",
+                "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_kubernetes_name'), parameters('loadBalancers_kubernetes_name'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.240.0.6",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_aks_vnet_32222301_name'), 'aks-subnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4",
+                            "loadBalancerBackendAddressPools": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_kubernetes_name'), parameters('loadBalancers_kubernetes_name'))]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": true,
+                "enableIPForwarding": true
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2020-05-01",
+            "name": "[parameters('networkInterfaces_aks_agentpool_32222301_nic_1_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_aks_vnet_32222301_name'), 'aks-subnet')]",
+                "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_kubernetes_name'), parameters('loadBalancers_kubernetes_name'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.240.0.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_aks_vnet_32222301_name'), 'aks-subnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4",
+                            "loadBalancerBackendAddressPools": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_kubernetes_name'), parameters('loadBalancers_kubernetes_name'))]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": true,
+                "enableIPForwarding": true
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2020-05-01",
+            "name": "[parameters('networkInterfaces_aks_agentpool_32222301_nic_2_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_aks_vnet_32222301_name'), 'aks-subnet')]",
+                "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_kubernetes_name'), parameters('loadBalancers_kubernetes_name'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.240.0.5",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_aks_vnet_32222301_name'), 'aks-subnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4",
+                            "loadBalancerBackendAddressPools": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_kubernetes_name'), parameters('loadBalancers_kubernetes_name'))]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": true,
+                "enableIPForwarding": true
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-05-01",
+            "name": "[parameters('virtualNetworks_aks_vnet_32222301_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_aks_agentpool_32222301_nsg_name'))]",
+                "[resourceId('Microsoft.Network/routeTables', parameters('routeTables_aks_agentpool_32222301_routetable_name'))]"
+            ],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/8"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "aks-subnet",
+                        "properties": {
+                            "addressPrefix": "10.240.0.0/16",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_aks_agentpool_32222301_nsg_name'))]"
+                            },
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', parameters('routeTables_aks_agentpool_32222301_routetable_name'))]"
+                            },
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": [],
+                "enableDdosProtection": false,
+                "enableVmProtection": false
+            }
+        },
+        {
+            "type": "Microsoft.Compute/availabilitySets",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('availabilitySets_agentpool_availabilitySet_32222301_name')]",
+            "location": "westus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_aks_agentpool_32222301_0_name'))]",
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_aks_agentpool_32222301_1_name'))]",
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_aks_agentpool_32222301_2_name'))]"
+            ],
+            "sku": {
+                "name": "Aligned"
+            },
+            "properties": {
+                "platformUpdateDomainCount": 3,
+                "platformFaultDomainCount": 2,
+                "virtualMachines": [
+                    {
+                        "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_aks_agentpool_32222301_0_name'))]"
+                    },
+                    {
+                        "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_aks_agentpool_32222301_1_name'))]"
+                    },
+                    {
+                        "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_aks_agentpool_32222301_2_name'))]"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2020-05-01",
+            "name": "[concat(parameters('virtualNetworks_aks_vnet_32222301_name'), '/aks-subnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_aks_vnet_32222301_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_aks_agentpool_32222301_nsg_name'))]",
+                "[resourceId('Microsoft.Network/routeTables', parameters('routeTables_aks_agentpool_32222301_routetable_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.240.0.0/16",
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_aks_agentpool_32222301_nsg_name'))]"
+                },
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables', parameters('routeTables_aks_agentpool_32222301_routetable_name'))]"
+                },
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        }
+    ]
+}

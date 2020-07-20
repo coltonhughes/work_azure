@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "storageAccounts_cs71003bffdae5e3434_name": {
-            "value": null
+            "value": "cs71003bffdae5e3434"
         }
     }
 }

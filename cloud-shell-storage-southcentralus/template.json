@@ -1,13 +1,18 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {},
+    "parameters": {
+        "storageAccounts_cs75433423bqwerdf38_name": {
+            "defaultValue": "cs75433423bqwerdf38",
+            "type": "String"
+        }
+    },
     "variables": {},
     "resources": [
         {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2019-06-01",
-            "name": "[parameters('storageAccounts_cs71003bffdae5e3434_name')]",
+            "name": "[parameters('storageAccounts_cs75433423bqwerdf38_name')]",
             "location": "southcentralus",
             "tags": {
                 "Dept": "NetSec",
@@ -45,9 +50,9 @@
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices",
             "apiVersion": "2019-06-01",
-            "name": "[concat(parameters('storageAccounts_cs71003bffdae5e3434_name'), '/default')]",
+            "name": "[concat(parameters('storageAccounts_cs75433423bqwerdf38_name'), '/default')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_cs71003bffdae5e3434_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_cs75433423bqwerdf38_name'))]"
             ],
             "sku": {
                 "name": "Standard_LRS",
@@ -65,9 +70,9 @@
         {
             "type": "Microsoft.Storage/storageAccounts/fileServices",
             "apiVersion": "2019-06-01",
-            "name": "[concat(parameters('storageAccounts_cs71003bffdae5e3434_name'), '/default')]",
+            "name": "[concat(parameters('storageAccounts_cs75433423bqwerdf38_name'), '/default')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_cs71003bffdae5e3434_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_cs75433423bqwerdf38_name'))]"
             ],
             "sku": {
                 "name": "Standard_LRS",
@@ -82,10 +87,10 @@
         {
             "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
             "apiVersion": "2019-06-01",
-            "name": "[concat(parameters('storageAccounts_cs71003bffdae5e3434_name'), '/default/cs-jerin-schreiber-firemon-com-1003bffdae5e4824')]",
+            "name": "[concat(parameters('storageAccounts_cs75433423bqwerdf38_name'), '/default/cs-jerin-schreiber-firemon-com-1003bffdae5e4824')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccounts_cs71003bffdae5e3434_name'), 'default')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_cs71003bffdae5e3434_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccounts_cs75433423bqwerdf38_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_cs75433423bqwerdf38_name'))]"
             ],
             "properties": {
                 "shareQuota": 6
